@@ -1,0 +1,18 @@
+.clickable {
+    cursor: pointer;
+    }
+
+.parent-hover{
+    
+    .child-hover{
+        display: none;
+        }
+    
+    &:hover{
+        
+    .child-hover{
+        display: block;
+        }
+        }
+    
+    }

@@ -1,0 +1,40 @@
+
+
+// $dark: #191919;
+// $primary: #232323;
+// $info: #177386;
+// $secondary: #545F71;
+// $tertiary: #545F71;
+// $light-gray: #E3E3E3;
+// $gray-blue: #738DA7;
+// $light-blue: #EBF1FF;
+// $light-green: #A4F391;
+// $light-danger: #F39191;
+// $light-orange: #FFEDDD;
+// $lighter-gray: #A8A8A8;
+// $white: #ffffff;
+
+// $theme-colors: ("primary": $primary,
+//     "secondary": $secondary,
+//     "tertiary": $tertiary,
+//     "dark": $dark,
+//     "info": $info,
+//     "gray-blue": $gray-blue,
+//     "light-green": $light-green,
+//     "success": $light-green,
+//     "light-danger": $light-danger,
+//     "danger": $light-danger,
+//     "warning": $light-orange,
+//     "lighter-gray": $lighter-gray,
+//     "white": $white);
+
+// $table-variants: ("light": $light-gray,
+// );
+
+
+    // @import '~bootstrap/scss/bootstrap.scss';
+@import '../../../node_modules/bootstrap/scss/bootstrap.scss';
+    
+
+
+@import 'design';
