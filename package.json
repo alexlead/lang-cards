@@ -1,6 +1,6 @@
 {
   "name": "lang-cards-app",
-  "homepage": "https://alexlead.github.io/lang-cards",
+  "homepage": "/lang-cards",
   "private": true,
   "version": "1.0.0",
   "type": "module",

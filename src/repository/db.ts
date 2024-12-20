@@ -28,6 +28,7 @@ let db: IDBPDatabase<AppDB>;
 
 export const initDB = async () => {
   db = await openDB<AppDB>('FolderWordDB', 2, { 
+    // @ts-ignore
     upgrade(db, oldVersion, newVersion) {
       if (oldVersion < 1) {
         const folderStore = db.createObjectStore('folders', { keyPath: 'id', autoIncrement: true });

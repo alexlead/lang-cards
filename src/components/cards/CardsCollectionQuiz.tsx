@@ -50,6 +50,7 @@ const CardsCollectionQuiz: React.FunctionComponent<ICardsCollectionQuizProps> = 
      }
 
      const handleAnswer = ( isCorrect: boolean ) => {
+          console.log( isCorrect );
 
           setTimeout( () => {
                generateNumbers()
