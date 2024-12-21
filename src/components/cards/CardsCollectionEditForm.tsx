@@ -126,7 +126,7 @@ const CardsCollectionEditForm: React.FunctionComponent<ICardsCollectionEditFormP
       return false;
     }
     try {
-      const res = await wordDB.update(word.id, { word: word.word, transcription: word.transcription, translation: word.translation });
+      await wordDB.update(word.id, { word: word.word, transcription: word.transcription, translation: word.translation });
 
       return true;
     } catch (error) {
@@ -140,7 +140,7 @@ const CardsCollectionEditForm: React.FunctionComponent<ICardsCollectionEditFormP
       return false;
     }
     try {
-      const res = await wordDB.add(currentFolder.id, word.word, word.transcription, word.translation, word.id );
+      await wordDB.add(currentFolder.id, word.word, word.transcription, word.translation, word.id );
       return true;
     } catch (error) {
       console.log(error);
