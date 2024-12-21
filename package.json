@@ -2,7 +2,7 @@
   "name": "lang-cards-app",
   "homepage": "/lang-cards",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
