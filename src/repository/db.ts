@@ -80,8 +80,8 @@ export const folderDB = {
 
 
 export const wordDB = {
-  async add(folderId: number, word: string, transcription: string, translation: string) {
-    return db.put('words', { id: Date.now(), folderId, word, transcription, translation });
+  async add(folderId: number, word: string, transcription: string, translation: string, id?: number) {
+    return db.put('words', { id: id ? id : Date.now(), folderId, word, transcription, translation });
   },
   async delete(id: number) {
     return db.delete('words', id);

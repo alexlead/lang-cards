@@ -12,7 +12,7 @@ const CardsCollectionEdit: React.FunctionComponent<ICardsCollectionEditProps> = 
         <div className="container my-3">
             <div className="row">
 
-                <h1 className='mb-3'>Редактирование Коллекции</h1>
+                <h1 className='mb-3'>Collection Editing</h1>
 
 
                 <CardsCollectionEditForm />
