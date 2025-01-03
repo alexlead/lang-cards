@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { folderDB, wordDB } from '../../repository/db';
+import { folderDB, folderOptionDB, wordDB } from '../../repository/db';
 import { Link } from 'react-router-dom';
 
 
@@ -25,6 +25,9 @@ const CollectionList: React.FunctionComponent<ICollectionListProps> = ({collecti
         const res = await wordDB.getByFolderId(id);
         const wordsIds = [ ...res.map(item=>item.id)];
         await wordDB.deleteMultiple( wordsIds );
+        const foldOpt = await folderOptionDB.getByFolderId(id);
+        const foldOptIds = [ ...foldOpt.map(item=>item.id)];
+        await folderOptionDB.deleteMultiple( foldOptIds );
         await folderDB.delete(id);
         loadFolders();
       };
@@ -48,7 +51,7 @@ return(
      <input type='text' className="form-control mb-1" value={searchValue} onChange={handleSearch} placeholder='Search...'/>
     {
         foldersVisibleList.length > 0 &&
-        foldersVisibleList.map( (item, index) =><div key={`folder_${index}`} className='d-flex justify-content-between parent-hover text-success fw-bold fs-6' ><span className='clickable'><Link to={`/show/${item.slug}`} className=' text-success text-decoration-none' >{item.folder}</Link></span> <span className='child-hover'><Link to={`/quiz/${item.slug}`} className='text-success'><i className="bi bi-card-list clickable" ></i></Link> <Link to={`/edit/${item.slug}`} className='text-success'><i className="bi bi-pencil-square clickable" ></i></Link> <i className="bi bi-trash clickable" onClick={()=>deleteFolder(item.id)}></i></span></div>)
+        foldersVisibleList.map( (item, index) =><div key={`folder_${index}`} className='d-flex justify-content-between parent-hover text-primary fw-bold fs-6' ><span className='clickable'><Link to={`/show/${item.slug}`} className=' text-primary text-decoration-none' >{item.folder}</Link></span> <span className='child-hover'><Link to={`/quiz/${item.slug}`} className='text-primary'><i className="bi bi-card-list clickable" ></i></Link> <Link to={`/edit/${item.slug}`} className='text-primary'><i className="bi bi-pencil-square clickable" ></i></Link> <i className="bi bi-trash clickable" onClick={()=>deleteFolder(item.id)}></i></span></div>)
     }
 
      </>

@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { folderDB, wordDB } from '../../repository/db';
-import { IFolderDb, WordRow } from '../../models/model';
-
+import { folderDB, folderOptionDB, wordDB } from '../../repository/db';
+import { IFolderDb, IFolderOption, ISelectOption, WordRow } from '../../models/model';
+import { getVoices } from '../../utils/voiceFunctions';
+import Select from 'react-select';
 
 interface ICardsCollectionEditFormProps {
 }
@@ -16,6 +17,11 @@ const CardsCollectionEditForm: React.FunctionComponent<ICardsCollectionEditFormP
   const lastInputRef = useRef<HTMLInputElement | null>(null);
 
   const [isSavingComplete, setIsSavingComplete] = useState<boolean>(false);
+  const [browserVoiceOptionList, setBrowserVoiceOptionList] = useState<ISelectOption[]>([]);
+  const [ wordVoiceOption, setWordVoiceOption ] = useState<ISelectOption | null>(null);
+  const [ translationVoiceOption, setTranslationVoiceOption ] = useState<ISelectOption | null>(null);
+  const [ dbWordVoiceOption, setDbWordVoiceOption ] = useState<IFolderOption | null>(null);
+  const [ dbTranslationVoiceOption, setDbTranslationVoiceOption ] = useState<IFolderOption | null>(null);
 
   const { slug } = useParams();
 
@@ -75,14 +81,38 @@ const CardsCollectionEditForm: React.FunctionComponent<ICardsCollectionEditFormP
 
 
   const handleSavingCollection = async () => {
-    console.log(rows)
 
     const resUpdate = await Promise.all(rows.filter(item => (item.newItem !== true && item.word.trim().length > 0)).map(item => updateWord(item)))
     const resAdd = await Promise.all(rows.filter(item => (item.newItem === true && item.word.trim().length > 0)).map(item => saveNewWord(item)))
     if (resUpdate && resAdd) {
       setIsSavingComplete(true);
     }
+    handleSavingFolderOptions();
+  }
 
+  const handleSavingFolderOptions = () => {
+    if ( wordVoiceOption ) {
+      if ( dbWordVoiceOption ) {
+        updateFolderOptions( dbWordVoiceOption.id, 'wordVoice', wordVoiceOption.label);
+      } else {
+        saveFolderOptions( 'wordVoice', wordVoiceOption.label);
+      }
+    } else {
+      if ( dbWordVoiceOption ) {
+        deleteFolderOptions( dbWordVoiceOption.id ); 
+      }
+    }
+    if ( translationVoiceOption ) {
+      if ( dbTranslationVoiceOption ) {
+        updateFolderOptions( dbTranslationVoiceOption.id, 'translationVoice', translationVoiceOption.label);
+      } else {
+        saveFolderOptions( 'translationVoice', translationVoiceOption.label);
+      }
+    } else {
+      if ( dbTranslationVoiceOption ) {
+        deleteFolderOptions( dbTranslationVoiceOption.id ); 
+      }
+    }
   }
 
   const handleRemovingWord = (id: number) => {
@@ -93,6 +123,13 @@ const CardsCollectionEditForm: React.FunctionComponent<ICardsCollectionEditFormP
     }
 
     setRows(newWordsList)
+  }
+
+  const handleWordSelectOption = (option: ISelectOption | null ) => {
+      setWordVoiceOption( option );
+  }
+  const handleTranslationSelectOption = (option: ISelectOption | null ) => {
+      setTranslationVoiceOption( option );
   }
 
   const getCollectionDetails = async () => {
@@ -108,6 +145,30 @@ const CardsCollectionEditForm: React.FunctionComponent<ICardsCollectionEditFormP
     }
   }
 
+  const getCollectionOptions = async () => {
+    if (!currentFolder) {
+      return;
+    }
+
+    try {
+      const res = await folderOptionDB.getByFolderId(currentFolder.id);
+      console.log( "options: ", res )
+      res.forEach( item => {
+        const voiceOption = item.value.split(": ");
+        if( item.option === "translationVoice") {
+          setDbTranslationVoiceOption( {...item});
+          setTranslationVoiceOption( { label: item.value, value: voiceOption[1], lang: voiceOption[0] })
+        }
+        if( item.option === "wordVoice") {
+          setDbWordVoiceOption( {...item});
+          setWordVoiceOption( { label: item.value, value: voiceOption[1], lang: voiceOption[0] })
+        }
+      })
+    } catch (error) {
+  
+    }
+  } 
+
   const getAllCollectionWords = async () => {
     if (!currentFolder) {
       return;
@@ -120,14 +181,53 @@ const CardsCollectionEditForm: React.FunctionComponent<ICardsCollectionEditFormP
     }
   }
 
-  const updateWord = async (word: WordRow) => {
+  const getAllBrowserVoices = async () => {
+    await getVoices().then((voices) => {
+      setBrowserVoiceOptionList([...voices.map(voice => ({ label: `${voice.lang}: ${voice.name}`, value: voice.name , lang: voice.lang}))])
+    });
+  }
 
+
+  const saveFolderOptions = async ( option: string, value: string) => {
+    if (!currentFolder) {
+      return false;
+    }
+    let id = Date.now();
+    if( option === "wordVoice") {
+      id = Date.now() - 5;
+    }
+    console.log(option , ": " , id )
+    try {
+      await  folderOptionDB.add(currentFolder.id, option, value, id);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  const updateFolderOptions = async (id: number, option: string, value: string) => {
+    if (!currentFolder) {
+      return false;
+    }
+    try {
+      await  folderOptionDB.update(id, {option, value});
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const deleteFolderOptions = async ( id: number ) => {
+    try {
+      await folderOptionDB.delete(id);
+    } catch (error) {
+      console.log( error );
+    }
+  }
+
+  const updateWord = async (word: WordRow) => {
     if (!currentFolder) {
       return false;
     }
     try {
       await wordDB.update(word.id, { word: word.word, transcription: word.transcription, translation: word.translation });
-
       return true;
     } catch (error) {
       console.log(error);
@@ -140,7 +240,7 @@ const CardsCollectionEditForm: React.FunctionComponent<ICardsCollectionEditFormP
       return false;
     }
     try {
-      await wordDB.add(currentFolder.id, word.word, word.transcription, word.translation, word.id );
+      await wordDB.add(currentFolder.id, word.word, word.transcription, word.translation, word.id);
       return true;
     } catch (error) {
       console.log(error);
@@ -157,7 +257,12 @@ const CardsCollectionEditForm: React.FunctionComponent<ICardsCollectionEditFormP
   }
 
   useEffect(() => {
+    setWordVoiceOption(null);
+    setTranslationVoiceOption(null);
+    setDbWordVoiceOption(null);
+    setDbTranslationVoiceOption(null);
     getCollectionDetails();
+    getAllBrowserVoices();
   }, [slug])
 
   useEffect(() => {
@@ -168,8 +273,9 @@ const CardsCollectionEditForm: React.FunctionComponent<ICardsCollectionEditFormP
 
 
   useEffect(() => {
-    if (currentFolder || isSavingComplete ) {
+    if (currentFolder || isSavingComplete) {
       setIsSavingComplete(false);
+      getCollectionOptions();
       getAllCollectionWords();
     }
   }, [currentFolder, isSavingComplete])
@@ -181,6 +287,36 @@ const CardsCollectionEditForm: React.FunctionComponent<ICardsCollectionEditFormP
         currentFolder &&
         <div className='h2'>{currentFolder.folder}</div>
 
+      }
+      {browserVoiceOptionList.length > 0 &&
+        <div className='border  border-success rounded p-3 my-2'>
+          <div className='mb-3'>AUDIO is available in your Browser, please select correct voice.</div>
+          <div className='d-flex align-items-center mb-3'>
+            <span className='text-nowrap w-25'>Word voice language:</span>
+            <Select
+            className='w-100'
+            onChange={handleWordSelectOption}
+            defaultValue={null}
+            value={wordVoiceOption}
+            isClearable={true}
+            isSearchable={true}
+            options={browserVoiceOptionList}
+            />
+    
+          </div>
+          <div className='d-flex align-items-center mb-3'>
+            <span className='text-nowrap w-25'>Translation voice language:</span>
+            <Select
+            className='w-100'
+            onChange={handleTranslationSelectOption}
+            value={translationVoiceOption}
+            defaultValue={null}
+            isClearable={true}
+            isSearchable={true}
+            options={browserVoiceOptionList}
+            />
+          </div>
+        </div>
       }
       <table className='table table-hover'>
         <thead>
@@ -234,7 +370,7 @@ const CardsCollectionEditForm: React.FunctionComponent<ICardsCollectionEditFormP
           ))}
         </tbody>
       </table>
-      <button type="button" className='btn btn-success' onClick={handleSavingCollection}>Сохранить</button>
+      <button type="button" className='btn btn-primary' onClick={handleSavingCollection}>Сохранить</button>
     </>
   );
 }

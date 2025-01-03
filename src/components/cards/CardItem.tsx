@@ -22,8 +22,8 @@ const CardItem: React.FunctionComponent<ICardItemProps> = ({ word }) => {
                 {
                     !displayBack ?
 
-                    <div className="word-card__front text-dark bg-success-subtle rounded p-2 border border-1 border-success ">
-                    <div className='d-flex flex-column align-items-center justify-content-center p-5 text-white bg-success rounded' style={{height: "450px"}}>
+                    <div className="word-card__front text-dark bg-primary-subtle rounded p-2 border border-1 border-primary ">
+                    <div className='d-flex flex-column align-items-center justify-content-center p-5 text-white bg-primary rounded' style={{height: "450px"}}>
                         <div className='fs-1'>
                             {word.word}
                         </div>
@@ -36,8 +36,8 @@ const CardItem: React.FunctionComponent<ICardItemProps> = ({ word }) => {
                     </div>
                 </div>
                 :
-                <div className="word-card__back text-white bg-success rounded p-2 border border-1 border-success">
-                    <div className='d-flex flex-column align-items-center justify-content-center  p-5 text-success bg-success-subtle rounded' style={{height: "450px"}}>
+                <div className="word-card__back text-white bg-primary rounded p-2 border border-1 border-primary">
+                    <div className='d-flex flex-column align-items-center justify-content-center  p-5 text-primary bg-primary-subtle rounded' style={{height: "450px"}}>
                         <div className='fs-1'>
                             {word.translation}
                         </div>

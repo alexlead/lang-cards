@@ -14,22 +14,16 @@
 // $lighter-gray: #A8A8A8;
 // $white: #ffffff;
 
-// $theme-colors: ("primary": $primary,
-//     "secondary": $secondary,
-//     "tertiary": $tertiary,
-//     "dark": $dark,
-//     "info": $info,
-//     "gray-blue": $gray-blue,
-//     "light-green": $light-green,
-//     "success": $light-green,
-//     "light-danger": $light-danger,
-//     "danger": $light-danger,
-//     "warning": $light-orange,
-//     "lighter-gray": $lighter-gray,
-//     "white": $white);
-
-// $table-variants: ("light": $light-gray,
-// );
+$theme-colors: (
+    "light":      #202a2e,
+    "dark":       #fcd590,
+    "primary":    #25355e,
+    "secondary":  #e72f3f,
+    "info":       #294f6d,
+    "success":    #1e9659,
+    "warning":    #dec721,
+    "danger":     #ea1e10,
+);
 
 
     // @import '~bootstrap/scss/bootstrap.scss';
