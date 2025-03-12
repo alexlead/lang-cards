@@ -4,6 +4,7 @@ import CardsCollectionEdit from './components/cards/CardsCollectionEdit'
 import CardsCollectionShow from './components/cards/CardsCollectionShow'
 import DefaultPage from './components/DefaultPage'
 import CardsCollectionQuiz from './components/cards/CardsCollectionQuiz'
+import CardsCollectionPairsPlay from './components/cards/CardsCollectionPairsPlay'
 import AppAbout from './components/AppAbout'
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path="/edit/:slug" element={<CardsCollectionEdit />} />
           <Route path="/show/:slug" element={<CardsCollectionShow />} />
           <Route path="/quiz/:slug" element={<CardsCollectionQuiz />} />
+          <Route path="/pairs/:slug" element={<CardsCollectionPairsPlay />} />
           <Route path="/404" element={<DefaultPage />} />
           <Route path="/*" element={<Navigate to="/404" replace />} />
           </Route>

@@ -23,7 +23,6 @@ export interface WordRow extends WordItem  {
 }
 
 
-
 export interface IVoiceOption {
   name: string;
   lang: string;
